@@ -1,7 +1,7 @@
 repository: test/best-test
 tag: latest
 imagePullPolicy: Never
-replicas: 1
+replicas: 2
 
 environment:
   SPARK_NO_DAEMONIZE: false
