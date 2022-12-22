@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spark-history-server.baseName" . }}-spark-conf
+  {{- template "spark-history-server.commonLabels" . }}
+data:
+  spark-defaults.conf: |-
+    {{- range $key, $val := .Values.sparkconf }}
+    {{ $key }}={{ $val }}
+    {{- end }}

@@ -1,0 +1,4 @@
+apiVersion: v2
+name: spark-history-server
+description: a chart for the spark history server
+version: 0.0.1

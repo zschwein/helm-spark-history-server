@@ -1,0 +1,42 @@
+repository: test/best-test
+tag: latest
+imagePullPolicy: Never
+replicas: 1
+
+environment:
+  SPARK_NO_DAEMONIZE: false
+  SPARK_CONF_DIR: /opt/spark/conf
+  SPARK_HISTORY_OPTS: -Dspark.history.fs.logDirectory=/opt/test/bucket/ # works better to specify path at SPARK_HISTORY_OPTS
+  # SPARK_HISTORY_OPTS: ...
+  # SPARK_DAEMON_MEMORY: 1g
+  # SPARK_DAEMON_JAVA_OPTS: ...
+  # SPARK_DAEMON_CLASSPATH: ...
+  # SPARK_PUBLIC_DNS: ...
+  # AWS_ROLE_SESSION_NAME token provider
+
+
+## @param nodeSelector Specifies node selector for the Spark history server
+nodeSelector: {}
+
+podAnnotations: {}
+
+## #param resource Specifies the requets and limits of cpu core for Spark History Server
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+service:
+  externalPort: 80
+  type: ClusterIP
+
+serviceaccount:
+  create: true
+  existingServiceAccountName: ""
+
+sparkconf:
+    'spark.hadoop.fs.s3a.aws.credentials.provider': com.amazonaws.auth.AWSCredentialsProviderChain #com.amazonaws.auth.WebIdentityTokenCredentialsProvider
+    'spark.history.fs.eventLog.rolling.maxFilesToRetain': '5'

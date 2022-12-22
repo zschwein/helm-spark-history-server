@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   {{- with .Values.podAnnotations }}
+   annotations:
+     {{- toYaml . | nindent 8 }}
+   {{- end }}
+  name: {{ template "spark-history-server.baseName" . }}
+  {{- template "spark-history-server.commonLabels" . }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+  type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "spark-history-server.baseName" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+         app.kubernetes.io/name: {{ template "spark-history-server.baseName" . }}
+         app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ template "spark-history-server.deploymentServiceAccount" . }}
+      containers:
+        - name: {{ template "spark-history-server.baseName" . }}-container
+          image: {{ .Values.repository }}:{{ .Values.tag }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command:
+            - /opt/spark/sbin/start-history-server.sh
+          envFrom:
+            - configMapRef:
+                name: {{ template "spark-history-server.baseName" . }}-env
+          ports:
+            - name: history-port
+              containerPort: 18080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: history-port
+            initialDelaySeconds: 60
+            periodSeconds: 120
+          readinessProbe:
+            httpGet:
+              path: /
+              port: history-port
+          volumeMounts:
+            - name: spark-config-volume
+              mountPath: /opt/spark/conf/spark-defaults.conf
+              subPath: spark-defaults.conf
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: spark-config-volume
+          configMap:
+            name: {{ template "spark-history-server.baseName" . }}-spark-conf
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
