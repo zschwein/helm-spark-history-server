@@ -1,6 +1,6 @@
-repository: spark-history/initial
-tag: latest
-imagePullPolicy: Never
+repository: spark-history/initial # apache/spark
+tag: latest # 3.3.1
+imagePullPolicy: Never #IfNotPresent
 replicas: 1
 
 environment:

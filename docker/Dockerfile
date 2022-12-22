@@ -7,7 +7,6 @@ USER root
 ARG HADOOP_VERSION=3.3.1
 ARG AWS_SDK_VERSION=1.12.224
 ARG MAVEN_REPO_URL=https://repo.maven.apache.org/maven2
-RUN mkdir /opt/spark/logs
 
 ADD ${MAVEN_REPO_URL}/com/amazonaws/aws-java-sdk-core/${AWS_SDK_VERSION}/aws-java-sdk-core-${AWS_SDK_VERSION}.jar $SPARK_HOME/jars/
 ADD ${MAVEN_REPO_URL}/com/amazonaws/aws-java-sdk-sts/${AWS_SDK_VERSION}/aws-java-sdk-sts-${AWS_SDK_VERSION}.jar $SPARK_HOME/jars/

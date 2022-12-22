@@ -21,7 +21,7 @@ spec:
          app.kubernetes.io/name: {{ template "spark-history-server.baseName" . }}
          app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ template "spark-history-server.deploymentServiceAccount" . }}
+      serviceAccountName: {{ template "spark-history-server.serviceAccountName" . }}
       containers:
         - name: {{ template "spark-history-server.baseName" . }}-container
           image: {{ .Values.repository }}:{{ .Values.tag }}
