@@ -1,7 +1,7 @@
-repository: test/best-test
+repository: spark-history/initial
 tag: latest
 imagePullPolicy: Never
-replicas: 2
+replicas: 1
 
 environment:
   SPARK_NO_DAEMONIZE: false
@@ -29,14 +29,17 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
+## #param serice specifies configurations for the history server service
 service:
   externalPort: 80
   type: ClusterIP
 
+## #param serviceaccount specifies to create a service account or use an existing.
 serviceaccount:
   create: true
   existingServiceAccountName: ""
 
+## #param sparkconf specifies the spark configurations to be set in a configmap and mounted to the history server pod at /opt/spark/conf/spark-conf
 sparkconf:
     'spark.hadoop.fs.s3a.aws.credentials.provider': com.amazonaws.auth.AWSCredentialsProviderChain #com.amazonaws.auth.WebIdentityTokenCredentialsProvider
     'spark.history.fs.eventLog.rolling.maxFilesToRetain': '5'
