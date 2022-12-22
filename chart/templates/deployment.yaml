@@ -10,12 +10,11 @@ metadata:
 spec:
   replicas: {{ .Values.replicas }}
   strategy:
-  type: RollingUpdate
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ template "spark-history-server.baseName" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  strategy: Recreate
   template:
     metadata:
       labels:
