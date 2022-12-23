@@ -2,11 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
    {{- with .Values.podAnnotations }}
-   annotations:
-     {{- toYaml . | nindent 8 }}
-   {{- end }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   name: {{ template "spark-history-server.baseName" . }}
-  {{- template "spark-history-server.commonLabels" . }}
+  labels:
+    {{- include "spark-history-server.commonLabels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   strategy:
@@ -21,7 +22,7 @@ spec:
          app.kubernetes.io/name: {{ template "spark-history-server.baseName" . }}
          app.kubernetes.io/instance: history-server
     spec:
-      serviceAccountName: {{ template "spark-history-server.serviceAccountName" . }}
+      serviceAccountName: {{ template "spark-history-server.baseName" . }}
       containers:
         - name: {{ template "spark-history-server.baseName" . }}-container
           image: {{ .Values.repository }}:{{ .Values.tag }}
